@@ -1,13 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intern_app/app/bloc/authentication_bloc.dart';
 import 'package:intern_app/app/repository/auth_repository.dart';
 import 'package:intern_app/app/views/app.dart';
-import 'package:intern_app/simpleAnimation.dart';
-import 'logoanimator.dart';
-import 'logoanimatorlandscape.dart';
+import 'animations/animators/logo_animator.dart';
+import 'animations/animators/logo_animator_landscape.dart';
+import 'animations/rive_animation/simple_animation.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
@@ -23,12 +21,16 @@ class HomePage extends StatelessWidget {
         actions: [profileButton(context)],
       ),
       body: _layoutDetails(context),
-      floatingActionButton: FloatingActionButton(
-        key: const Key('change'),
-        onPressed: () => Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const RiveAnimationPage())),
-        child: const Icon(Icons.navigate_next),
-      ),
+      floatingActionButton: navigationButton(context),
+    );
+  }
+
+  FloatingActionButton navigationButton(BuildContext context) {
+    return FloatingActionButton(
+      key: const Key('change'),
+      onPressed: () => Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const RiveAnimationPage())),
+      child: const Icon(Icons.navigate_next),
     );
   }
 

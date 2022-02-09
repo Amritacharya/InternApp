@@ -1,7 +1,8 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:intern_app/app/repository/authRepository.dart';
+import 'package:intern_app/app/repository/auth_repository.dart';
 import 'package:intern_app/login/cubit/login_cubit.dart';
+import 'package:intern_app/login/cubit/login_state.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockAuthenticationRepository extends Mock
@@ -32,7 +33,7 @@ void main() {
         'when logInWithGoogle succeeds',
         build: () => LoginCubit(authenticationRepository),
         act: (cubit) => cubit.logInWithGoogle(),
-        expect: () => [isA<Loging>(), isA<LoginSuccess>()],
+        expect: () => [isA<LoginLoading>(), isA<LoginSuccess>()],
       );
 
       blocTest<LoginCubit, LoginState>(
@@ -45,7 +46,7 @@ void main() {
         },
         build: () => LoginCubit(authenticationRepository),
         act: (cubit) => cubit.logInWithGoogle(),
-        expect: () => [isA<Loging>(), isA<LoginFailed>()],
+        expect: () => [isA<LoginLoading>(), isA<LoginFailed>()],
       );
     });
   });

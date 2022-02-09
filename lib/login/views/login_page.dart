@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intern_app/app/repository/auth_repository.dart';
 import 'package:intern_app/login/cubit/login_cubit.dart';
+import 'package:intern_app/login/cubit/login_state.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({
@@ -16,31 +17,48 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => LoginCubit(_authenticationRepository),
-      child: Center(
-        child: BlocBuilder<LoginCubit, LoginState>(
-          builder: (context, state) {
-            if (state is Loging) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  CircularProgressIndicator(),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text("Loging")
-                ],
-              );
-            } else {
-              return ElevatedButton(
-                onPressed: () {
-                  context.read<LoginCubit>().logInWithGoogle();
-                },
-                child: const Text("Sign in with Google"),
-              );
-            }
-          },
+      child: BlocListener<LoginCubit, LoginState>(
+        listener: (context, state) {
+          if (state is LoginFailed) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              backgroundColor: Colors.red[200],
+              content: Text(
+                state.error,
+                style: const TextStyle(fontSize: 16),
+              ),
+            ));
+          }
+        },
+        child: Center(
+          child: BlocBuilder<LoginCubit, LoginState>(
+            builder: (context, state) {
+              return state.when(
+                  failed: (String error) => loginButton(context),
+                  initial: () => loginButton(context),
+                  loading: () => Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          CircularProgressIndicator(),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text("Loging")
+                        ],
+                      ),
+                  success: () => loginButton(context));
+            },
+          ),
         ),
       ),
+    );
+  }
+
+  ElevatedButton loginButton(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        context.read<LoginCubit>().logInWithGoogle();
+      },
+      child: const Text("Sign in with Google"),
     );
   }
 }

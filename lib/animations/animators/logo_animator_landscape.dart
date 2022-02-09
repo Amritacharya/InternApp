@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'logopainterlandscape.dart';
+import 'package:intern_app/animations/painters/logo_painter_landscape.dart';
 
 class LogoAnimatorLandscape extends StatefulWidget {
   const LogoAnimatorLandscape({Key? key}) : super(key: key);

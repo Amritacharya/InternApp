@@ -1,20 +1,18 @@
 import 'package:bloc/bloc.dart';
 import 'package:intern_app/app/repository/auth_repository.dart';
-import 'package:meta/meta.dart';
-
-part 'login_state.dart';
+import 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
-  LoginCubit(this._authenticationRepository) : super(LoginInitial());
+  LoginCubit(this._authenticationRepository) : super(LoginState.initial());
   final AuthenticationRepository _authenticationRepository;
 
   Future<void> logInWithGoogle() async {
-    emit(Loging());
+    emit(LoginState.loading());
     try {
       await _authenticationRepository.logInWithGoogle();
-      emit(LoginSuccess());
+      emit(LoginState.success());
     } catch (e) {
-      emit(LoginFailed(e.toString()));
+      emit(LoginState.failed(e.toString()));
     }
   }
 }
