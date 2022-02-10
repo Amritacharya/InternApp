@@ -32,20 +32,19 @@ class LoginPage extends StatelessWidget {
         child: Center(
           child: BlocBuilder<LoginCubit, LoginState>(
             builder: (context, state) {
-              return state.when(
-                  failed: (String error) => loginButton(context),
-                  initial: () => loginButton(context),
-                  loading: () => Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          CircularProgressIndicator(),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text("Loging")
-                        ],
-                      ),
-                  success: () => loginButton(context));
+              return state.maybeWhen(
+                loading: () => Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    CircularProgressIndicator(),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text("Loging")
+                  ],
+                ),
+                orElse: () => loginButton(context),
+              );
             },
           ),
         ),
